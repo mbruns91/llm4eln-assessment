@@ -13,13 +13,11 @@ if environ.get("API_PROVIDER") == "azure":
         api_key=environ.get("API_KEY"),  # or your api key
         azure_endpoint=environ.get("API_ENDPOINT")
     )
-
-if environ.get("API_PROVIDER") == "ollama":
+elif environ.get("API_PROVIDER") == "ollama":
     # https://docs.langchain.com/oss/python/integrations/chat/ollama
     from langchain_ollama import ChatOllama
     llm = ChatOllama(model=environ.get("API_MODEL"))
-
-if environ.get("API_PROVIDER") == "blablador":
+elif environ.get("API_PROVIDER") == "blablador":
     # https://sdlaml.pages.jsc.fz-juelich.de/ai/guides/blablador_api_access/
     from langchain_openai import ChatOpenAI
     llm = ChatOpenAI(
@@ -27,26 +25,28 @@ if environ.get("API_PROVIDER") == "blablador":
         api_key=environ.get("API_KEY"),
         base_url=environ.get("API_ENDPOINT")
     )
-
-if environ.get("API_PROVIDER") == "openai":
-    from langchain_openai import ChatOpenAI
-    llm = ChatOpenAI(api_key=environ.get("API_KEY"))
-
-if environ.get("API_PROVIDER") == "chatai":
+elif environ.get("API_PROVIDER") == "openai":
     from langchain_openai import ChatOpenAI
     llm = ChatOpenAI(
         api_key=environ.get("API_KEY"),
-        openai_api_base=environ.get("API_ENDPOINT"),
-        model=environ.get("API_MODEL")
+        model=environ.get("API_MODEL"),
     )
-
-if environ.get("API_PROVIDER") == "gemini":
+elif environ.get("API_PROVIDER") == "chatai":
+    from langchain_openai import ChatOpenAI
+    llm = ChatOpenAI(
+        api_key=environ.get("API_KEY"),
+        base_url=environ.get("API_ENDPOINT"),
+        model=environ.get("API_MODEL"),
+    )
+elif environ.get("API_PROVIDER") == "gemini":
     from langchain_openai import ChatOpenAI
     from langchain_google_genai import ChatGoogleGenerativeAI  # noqa: E402
     llm = ChatGoogleGenerativeAI(
         api_key=environ.get("API_KEY"),
         model=environ.get("API_MODEL")
     )
+else:
+    raise: ValeError(f"Unknown or missing API_PROVIDER: {provider}")
 
 messages = [
     (
